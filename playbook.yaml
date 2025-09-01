@@ -1,0 +1,18 @@
+---
+- name: Instalação do nginx e configuração de uma página estática
+  hosts: raspberry
+  tasks:
+    - name: Instala o nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Copia a página inicial
+      copy:
+        src: ./src/index.html
+        dest: /var/www/html/index.nginx-debian.html
+
+    - name: Inicia o serviço do nginx
+      service:
+        name: nginx
+        state: started
