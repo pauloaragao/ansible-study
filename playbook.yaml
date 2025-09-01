@@ -1,6 +1,7 @@
 ---
 - name: Instalação do nginx e configuração de uma página estática
   hosts: raspberry
+  remote_user: pauloaragao
   tasks:
     - name: Instala o nginx
       apt:
@@ -10,9 +11,15 @@
     - name: Copia a página inicial
       copy:
         src: ./src/index.html
-        dest: /var/www/html/index.nginx-debian.html
+        dest: /home/pauloaragao/index.html
+    
+    - name: Copiar arquivo nginx.conf para servidor
+      become: true
+      copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
 
-    - name: Inicia o serviço do nginx
+    - name: Started o serviço do nginx
       service:
         name: nginx
         state: started
