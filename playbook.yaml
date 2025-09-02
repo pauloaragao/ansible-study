@@ -1,8 +1,34 @@
 ---
 - name: Instalação do nginx e configuração de uma página estática
   hosts: raspberry
-  remote_user: pauloaragao
+  remote_user: root
   tasks:
+    - name: Criar um usuario juliabarros
+      ansible.builtin.user:
+        name: juliabarros
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        password: $123456789
+      become: true
+      
+    - name: Criar o diretorio .ssh
+      file:
+        path: /home/juliabarros/.ssh
+        state: directory
+        owner: juliabarros
+        group: juliabarros
+        recurse: true
+    
+    
+    - name: Adicionar a chave publica no arquivo authorized_keys
+      copy:
+        src: ./id_rsa.pub
+        dest: /home/juliabarros/.ssh/authorized_keys
+        owner: juliabarros
+        group: juliabarros
+      become: true
+
     - name: Instala o nginx
       apt:
         name: nginx
