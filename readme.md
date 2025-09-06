@@ -1,3 +1,34 @@
+# Ansible Study Project
+
+## What is Ansible?
+Ansible is an open-source automation tool for IT tasks such as configuration management, application deployment, and orchestration. It uses simple YAML files (playbooks) to describe automation jobs and connects to remote machines via SSH, making it agentless and easy to use.
+
+## Project Structure
+This repository demonstrates how to use Ansible to manage a Raspberry Pi from a local environment. The main files and folders are:
+
+- `ansible.cfg`: Ansible configuration file.
+- `hosts.yaml` or `hosts`: Inventory file listing managed hosts.
+- `playbook.yaml`: Main playbook with tasks for user creation, SSH setup, nginx installation, and static page deployment.
+- `.env`: (optional) Stores SSH password for use with sshpass.
+- `index.html`, `nginx.conf`, `id_rsa.pub`, `aula.pub`: Example files used in playbooks and tasks.
+- `variaveis.yaml` or `vars.yaml`: Variables file for playbooks.
+
+## How to Use
+1. Configure your inventory file (`hosts.yaml` or `hosts`) with the IP address and user of your Raspberry Pi.
+2. Edit `ansible.cfg` to set defaults (user, key checking, etc).
+3. Place all required files (public keys, configs, HTML) in the project directory.
+4. Run playbooks using:
+	```bash
+	ansible-playbook -i hosts playbook.yaml --extra-vars="@variaveis.yaml" --ask-become-pass
+	```
+5. Adjust variables in `variaveis.yaml` as needed for your environment.
+
+## Notes
+- All tasks requiring root privileges use `become: true`.
+- SSH authentication can be done via password (`sshpass` + `.env`) or SSH key.
+- The playbooks are modular and can be extended for other services or configurations.
+
+---
 
 # Ansible + Raspberry Pi: Guia de Estudo
 
