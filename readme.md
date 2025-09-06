@@ -1,4 +1,9 @@
-# Ansible Study Project
+# 🚀 Ansible Study Project 🧑‍🚀
+
+These notes are from my study of Ansible in the DevOps Pro course by Fabrício Veronez. You can find more about the course here: https://curso.devopspro.com.br/devops-pro/
+
+If you have any questions about the course or the code, feel free to send me a message on my LinkedIn: https://www.linkedin.com/in/pauloaragaoo/. I will be happy to reply and help you understand this technology.
+
 
 ## What is Ansible?
 Ansible is an open-source automation tool for IT tasks such as configuration management, application deployment, and orchestration. It uses simple YAML files (playbooks) to describe automation jobs and connects to remote machines via SSH, making it agentless and easy to use.
