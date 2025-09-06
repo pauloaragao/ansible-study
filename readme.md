@@ -30,18 +30,19 @@ This repository demonstrates how to use Ansible to manage a Raspberry Pi from a 
 
 ---
 
-# Ansible + Raspberry Pi: Guia de Estudo
 
-Este repositório demonstra como gerenciar um Raspberry Pi usando Ansible a partir de um ambiente local.
+# Ansible + Raspberry Pi: Study Guide
 
-## 1. Estrutura do Projeto
+This repository demonstrates how to manage a Raspberry Pi using Ansible from a local environment.
 
-- `ansible.cfg`: Configuração do Ansible.
-- `hosts.yaml`: Inventário no formato YAML.
-- `.env`: (opcional) Armazena senha SSH para uso com sshpass.
+## 1. Project Structure
 
-## 2. Inventário de Hosts (hosts.yaml)
-Exemplo:
+- `ansible.cfg`: Ansible configuration file.
+- `hosts.yaml`: Inventory in YAML format.
+- `.env`: (optional) Stores SSH password for use with sshpass.
+
+## 2. Hosts Inventory (hosts.yaml)
+Example:
 ```yaml
 all:
 	hosts:
@@ -56,58 +57,58 @@ all:
 				ansible_user: pauloaragao
 ```
 
-## 3. Configuração do Ansible (ansible.cfg)
-Exemplo:
+## 3. Ansible Configuration (ansible.cfg)
+Example:
 ```ini
 [defaults]
 host_keychecking = False
 #remote_user = pauloaragao
-# Para uso de senha via .env e sshpass:
-# 1. Crie um arquivo .env com SSHPASS=sua_senha
-# 2. Execute: set -a; source .env; set +a; sshpass -e ansible ...
+# For password usage via .env and sshpass:
+# 1. Create a .env file with SSHPASS=your_password
+# 2. Run: set -a; source .env; set +a; sshpass -e ansible ...
 ```
 
-## 4. Autenticação SSH
+## 4. SSH Authentication
 
-- **Com senha:**
-	- Use `sshpass` e um arquivo `.env` com `SSHPASS=sua_senha`.
-	- Exemplo de comando:
+- **With password:**
+	- Use `sshpass` and a `.env` file with `SSHPASS=your_password`.
+	- Example command:
 		```sh
 		set -a; source .env; set +a; sshpass -e ansible raspberry -i hosts.yaml -m ping
 		```
-- **Com chave SSH:**
-	- Configure `private_key_file` no `ansible.cfg` e garanta que a chave está autorizada no Raspberry Pi.
+- **With SSH key:**
+	- Set up `private_key_file` in `ansible.cfg` and ensure the key is authorized on the Raspberry Pi.
 
-## 5. Comandos Úteis
+## 5. Useful Commands
 
 - **Ping:**
 	```sh
 	ansible raspberry -i hosts.yaml -m ping
 	```
-- **Reboot (necessita sudo):**
+- **Reboot (requires sudo):**
 	```sh
 	ansible raspberry -i hosts.yaml -m reboot -b --ask-become-pass
 	```
-- **Instalar pacote (necessita sudo):**
+- **Install package (requires sudo):**
 	```sh
 	ansible raspberry -i hosts.yaml -m apt -a "name=vim state=present" -b --ask-become-pass
 	```
-- **Gerenciar serviços:**
-	- Iniciar:
+- **Manage services:**
+	- Start:
 		```sh
 		ansible all -i hosts.yaml -m service -a "name=nginx state=started" -b --ask-become-pass
 		```
-	- Parar:
+	- Stop:
 		```sh
 		ansible all -i hosts.yaml -m service -a "name=nginx state=stopped" -b --ask-become-pass
 		```
 
-## 6. Dicas e Troubleshooting
+## 6. Tips and Troubleshooting
 
-- Sempre use `-b` para comandos que exigem root (apt, reboot, service, etc).
-- Se receber erro de inventário, confira o caminho e formato do arquivo (`hosts.yaml`).
-- Para problemas com repositórios APT, revise as URLs em `/etc/apt/sources.list` e `/etc/apt/sources.list.d/` no Raspberry Pi.
-- Para autenticação SSH, prefira chaves ao invés de senha para automação.
+- Always use `-b` for commands that require root (apt, reboot, service, etc).
+- If you get an inventory error, check the path and format of the file (`hosts.yaml`).
+- For APT repository issues, review the URLs in `/etc/apt/sources.list` and `/etc/apt/sources.list.d/` on the Raspberry Pi.
+- For SSH authentication, prefer keys over passwords for automation.
 
 ---
-Documentação criada para fins de estudo e automação de Raspberry Pi com Ansible.
+Documentation created for study and automation of Raspberry Pi with Ansible.
