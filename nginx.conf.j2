@@ -1,4 +1,4 @@
-user pauloaragao;
+user {{ usuario }} {{ usuario }};
 worker_processes auto;
 
 events {
@@ -15,7 +15,7 @@ http {
         listen       80;
         server_name  localhost;
 
-        root /home/pauloaragao/;
+        root /home/{{ usuario }}/;
         index index.html index.htm;
 
         location / {

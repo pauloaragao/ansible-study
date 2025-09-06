@@ -1,0 +1,8 @@
+---
+- name: Trabalhando com templates
+  hosts: localhost
+  tasks:
+    - name: Criando o arquivo de template
+      ansible.builtin.template:
+        src: ./exemplo.j2
+        dest: /home/pauloaragao/ansible-study/playbook_output.txt

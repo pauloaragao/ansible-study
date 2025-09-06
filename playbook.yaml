@@ -1,8 +1,66 @@
 ---
-- name: Trabalhando com templates
-  hosts: localhost
+- name: Criação de usuario
+  hosts: raspberry
+  remote_user: "{{ usuario }}"
+  become: true
+  gather_facts: false
   tasks:
-    - name: Criando o arquivo de template
-      ansible.builtin.template:
-        src: ./exemplo.j2
-        dest: /home/pauloaragao/ansible-study/playbook_output.txt
+    - name: Instalação do pacote whois
+      apt:
+        name: whois
+        state: present
+        update_cache: yes
+      
+      
+    - name: Gerar senha criptografada
+      command: mkpasswd -m sha-512 "{{ senha }}"
+      register: cripto_pwd
+      
+      
+    - name: Verificar a senha criptografada
+      debug:
+        msg: "{{ cripto_pwd.stdout }}"
+    
+    - name: Criar usuário
+      user:
+        name: "{{ usuario }}"
+        password: "{{ cripto_pwd.stdout }}"
+        shell: /bin/bash
+        state: present
+        groups: sudo
+        append: yes
+    
+    - name: Criar o diretório .ssh
+      file:
+        path: "/home/{{ usuario }}/.ssh"
+        state: directory
+        group: "{{ usuario }}"
+        owner: "{{ usuario }}"
+        recurse: true
+    
+    - name: Adicionar a chave pública ao arquivo authorized_keys
+      copy:
+        src: "{{ chave_publica }}"
+        dest: "/home/{{ usuario }}/.ssh/authorized_keys"
+        owner: "{{ usuario }}"
+        group: "{{ usuario }}"
+        
+    - name: Instalar nginx
+      copy:
+        src: ./index.html
+        dest: /home/{{ usuario }}/index.html
+        
+    - name: Instalar nginx
+      apt:
+        name: nginx
+        update_cache: yes
+        
+    - name: Copiar arquivo nginx.conf para servidor
+      template:
+        src: ./nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+       
+    - name: Iniciar o serviço do nginx
+      service:
+        name: nginx
+        state: started
