@@ -1,0 +1,50 @@
+---
+- name: Criação de usuario
+  hosts: all
+  remote_user: pauloaragao
+  vars:
+    usuario: juliabarros
+    senha: 123456
+  tasks:
+    - name: Instalação do pacote whois
+      apt:
+        name: whois
+        state: present
+        update_cache: yes
+      become: true
+      
+    - name: Gerar senha criptografada
+      command: mkpasswd -m sha-512 "{{ senha }}"
+      register: cripto_pwd
+      
+      
+    - name: Verificar a senha criptografada
+      debug:
+        msg: "{{ cripto_pwd.stdout }}"
+    
+    - name: Criar usuário
+      user:
+        name: "{{ usuario }}"
+        password: "{{ cripto_pwd.stdout }}"
+        shell: /bin/bash
+        state: present
+        groups: sudo
+        append: yes
+      become: true
+    
+    - name: Criar o diretório .ssh
+      file:
+        path: "/home/{{ usuario }}/.ssh"
+        state: directory
+        group: "{{ usuario }}"
+        owner: "{{ usuario }}"
+        recurse: true
+    
+    - name: Adicionar a chave pública ao arquivo authorized_keys
+      copy:
+        src: /home/pauloaragao/.ssh/id_rsa.pub
+        dest: "/home/{{ usuario }}/.ssh/authorized_keys"
+        owner: "{{ usuario }}"
+        group: "{{ usuario }}"
+      become: true
+

@@ -1,0 +1,10 @@
+---
+- name: Resultado de um comando
+  hosts: all
+  tasks:
+    - name: Execução de um comando simples
+      ansible.builtin.shell: ps
+      register: ps_result
+    - name: Exibir o resultado do comando
+      ansible.builtin.debug:
+        msg: "{{ ps_result.stdout_lines }}"
