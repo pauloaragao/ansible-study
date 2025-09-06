@@ -1,0 +1,21 @@
+---
+- name: Teste de Instalação do nginx
+  hosts: all
+  remote_user: pauloaragao
+  become: true
+  gather_facts: true # carrega as facts do sistema
+  tasks:
+    - name: Instalar o nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: true
+      register: nginx_out
+    
+    - name: Verificar a instalação do nginx
+      debug:
+        msg: " {{ nginx_out }} "
+    
+    - name: Ver a rede 
+      debug:
+        msg: "{{ ansible_distribution }} - {{ ansible_distribution_version }} - {{ ansible_default_ipv4.address }}"
